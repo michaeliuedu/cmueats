@@ -1,5 +1,5 @@
 import { Pin, MapPin } from 'lucide-react';
-import { Interval } from 'luxon';
+import { DateTime, Interval } from 'luxon';
 import { ILocation_Full } from '../types/locationTypes';
 import css from './EateryCardContent.module.css';
 import { useCurrentTime } from '../contexts/NowContext';
@@ -8,7 +8,8 @@ function EateryCardContent({ location, partOfMainGrid }: { location: ILocation_F
     const { location: physicalLocation, name, cardViewPreference } = location;
     const isPinned = cardViewPreference === 'pinned';
     const now = useCurrentTime();
-    const interval = Interval.fromDateTimes(now, { year: 2026, month: 5, day: 5 });
+    const GALLO_CLOSING_DATE = DateTime.fromObject({ year: 2026, month: 5, day: 5 }, { zone: 'America/New_York' });
+    const interval = Interval.fromDateTimes(now, GALLO_CLOSING_DATE);
     const isGallo = location.name.toLowerCase().includes('gallo');
 
     return (
