@@ -49,6 +49,9 @@
         flex-shrink: 0;
     }
 }
+.physical-location-text--warn {
+    color: var(--red-300);
+}
 
 .action-bar {
     display: none;
