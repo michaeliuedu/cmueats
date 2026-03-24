@@ -10,7 +10,7 @@ import mikuBgUrl from '../assets/miku/miku.jpg';
 import EateryCardGrid from '../components/EateryCardGrid';
 import Drawer from '../components/Drawer';
 import { DrawerAPIContextProvider, useDrawerAPIContext } from '../contexts/DrawerAPIContext';
-import useFilteredLocations from './useFilteredLocations';
+import { useFilteredLocations } from '../util/useFilteredLocations';
 import './ListPage.css';
 import { CardViewPreference } from '../util/storage';
 import Footer from '../components/Footer';

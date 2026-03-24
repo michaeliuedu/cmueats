@@ -112,3 +112,11 @@ export type ILocation_ExtraData_Map = {
 
 /** once we combine extraDataMap with our base api data */
 export type ILocation_Full = ILocation_FromAPI & ILocation_ExtraData & ILocation_RatingData;
+
+export type IMikuCardData = {
+    id?: undefined;
+    title: string;
+    artist: string;
+    image: string;
+    songUrl: string;
+};

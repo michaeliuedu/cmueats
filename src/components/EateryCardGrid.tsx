@@ -5,13 +5,16 @@ import clsx from 'clsx';
 import EateryCard from './EateryCard';
 import EateryCardSkeleton from './EateryCardSkeleton';
 import NoResultsError from './NoResultsError';
-import { LocationState, ILocation_Full } from '../types/locationTypes';
-import assert from '../util/assert';
+import { ILocation_Full, IMikuCardData, LocationState } from '../types/locationTypes';
 import css from './EateryCardGrid.module.css';
 import { SelectSort } from './SelectSort';
 
 import DropdownArrow from '../assets/control_buttons/dropdown_arrow.svg?react';
 import { CardViewPreference } from '../util/storage';
+import mikuSongs from '../data/mikuSongs';
+import MikuCard from './MikuCard';
+import { useThemeContext } from '../ThemeProvider';
+import assert from '../util/assert';
 
 const compareLocationsByTime = (location1: ILocation_Full, location2: ILocation_Full) => {
     const state1 = location1.locationState;
@@ -30,6 +33,7 @@ const compareLocationsByTime = (location1: ILocation_Full, location2: ILocation_
     }
     return location1.minutesUntil - location2.minutesUntil;
 };
+
 
 const compareLocationsByRating = (l1: ILocation_Full, l2: ILocation_Full, type: SelectSort) => {
     const r1 = l1.averageRating ?? null;
@@ -52,15 +56,17 @@ export default function EateryCardGrid({
     updateCardViewPreference,
     sortOption,
 }: {
+    /** locations should already be filtered and sorted - this component is just responsible for rendering the content as-is */
     locations: ILocation_Full[] | undefined;
     setSearchQuery: React.Dispatch<string>;
+    /** whether or not to animate card fade in transition on mount. this is set to false when the user performs a search */
     shouldAnimateCards: boolean;
     apiError: boolean;
     updateCardViewPreference: (id: string, newStatus: CardViewPreference) => void;
     sortOption: SelectSort;
 }) {
     const [showHiddenSection, setShowHiddenSection] = useState(false);
-
+    const { theme } = useThemeContext();
     if (apiError)
         return (
             <p className={css['locations__error-text']}>
@@ -96,39 +102,63 @@ export default function EateryCardGrid({
         return compareLocationsByTime(location1, location2);
     }); // we make a copy to avoid mutating the original array
 
-    function locationToCard(location: ILocation_Full) {
+    function locationToCard(data: ILocation_Full | IMikuCardData) {
+        if (data.id === undefined) {
+            // janky type discrimination
+            return <MikuCard songData={data} key={data.songUrl} animate={shouldAnimateCards} />;
+        }
         return (
             <EateryCard
-                location={location}
-                key={location.id}
+                location={data}
+                key={data.id}
                 animate={shouldAnimateCards}
                 partOfMainGrid
                 updateViewPreference={(newPreference: CardViewPreference) => {
-                    updateCardViewPreference(location.id, newPreference);
+                    updateCardViewPreference(data.id, newPreference);
                 }}
             />
         );
     }
-
+    const pinnedLocations = sortedLocations.filter((location) => location.cardViewPreference === 'pinned');
+    const normalLocations = sortedLocations.filter((location) => location.cardViewPreference === 'normal');
     const hiddenLocations = sortedLocations.filter((location) => location.cardViewPreference === 'hidden');
+    const mainCards = [...pinnedLocations, ...normalLocations];
+    const mainCardsWithMikuSongs: (ILocation_Full | IMikuCardData)[] = [];
+    if (theme === 'miku') {
+        mainCardsWithMikuSongs.push(...mainCards.splice(0, 1));
+        for (let i = 0; i < Math.min(7, mikuSongs.length); i++) {
+            mainCardsWithMikuSongs.push(mikuSongs[i]!);
+            mainCardsWithMikuSongs.push(...mainCards.splice(0, 5));
+        }
+    }
+    mainCardsWithMikuSongs.push(...mainCards); // rest
 
     return (
         <div className={css.supergrid}>
             <div className={css['supergrid__help-text']}>
-                <div>Do we have wrong data? Let us know through the card dropdown!</div>
                 <div>
                     <Info size={16} aria-hidden="true" />
-                    <span>Tap or click on the cards for more information!</span>
+                    <span>
+                        {theme === 'miku' ? (
+                            <>
+                                See the full Miku playlist{' '}
+                                <a
+                                    target="_blank"
+                                    href="https://open.spotify.com/playlist/3SMANeNbyWci6ZveHBZMK2?si=edeb9eb3c83747ba"
+                                    rel="noreferrer"
+                                >
+                                    here!
+                                </a>
+                            </>
+                        ) : (
+                            'Tap or click on the cards for more information!'
+                        )}
+                    </span>
                 </div>
             </div>
             <div className={css.supergrid__section}>
                 <div className={css.supergrid__grid}>
-                    <AnimatePresence mode="popLayout">
-                        {[
-                            ...sortedLocations.filter((location) => location.cardViewPreference === 'pinned'),
-                            ...sortedLocations.filter((location) => location.cardViewPreference === 'normal'),
-                        ].map(locationToCard)}
-                    </AnimatePresence>
+                    <AnimatePresence mode="popLayout">{mainCardsWithMikuSongs.map(locationToCard)}</AnimatePresence>
                 </div>
             </div>
 
