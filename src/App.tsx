@@ -32,11 +32,12 @@ export default function App() {
     const locationIds = useMemo(() => locations?.map((location) => location.id) ?? [], [locations]);
 
     const reviewSummaries = useQueries({
-        queries: locationIds.map((locationId) =>
-            $api.queryOptions('get', '/v2/locations/{locationId}/reviews/summary', {
+        queries: locationIds.map((locationId) => ({
+            ...$api.queryOptions('get', '/v2/locations/{locationId}/reviews/summary', {
                 params: { path: { locationId } },
             }),
-        ),
+            enabled: !!locationId,
+        })),
     });
 
     const ratingMap = useMemo(() => {

@@ -65,7 +65,12 @@ function ListBox({
             }}
         >
             <ListPageHeader />
-            <div className="list-controls-container" onClick={(ev) => ev.preventDefault()}>
+            <div
+                className="list-controls-container"
+                onClick={(ev) => {
+                    ev.stopPropagation();
+                }}
+            >
                 <div className="list-controls-layout">
                     <SearchBar searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
                     <SelectLocation {...{ setLocationFilterQuery, locations }} />

@@ -13,6 +13,7 @@ function SelectSortControl({ sortOption, setSortOption }: SelectSortProps) {
             onChange={(e) => setSortOption(e.target.value as SelectSort)}
             className={css.select}
             value={sortOption}
+            aria-label="Sort results"
         >
             <option value="time">Sort by Opening</option>
             <option value="stars-desc">Sort by Highest Rating</option>

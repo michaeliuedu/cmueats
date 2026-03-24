@@ -98,12 +98,12 @@ export type ILocation_TimeStatusData =
 export type ILocation_RatingData = {
     averageRating?: number | null;
     ratingCount?: number | null;
-}
+};
 
 /** Extra data derived from a single location */
 export type ILocation_ExtraData = ILocation_TimeStatusData & {
-        cardViewPreference: CardViewPreference;
-    };
+    cardViewPreference: CardViewPreference;
+};
 
 /** we'll typically pass this into components for efficient look-up of extra data (like time until close) */
 export type ILocation_ExtraData_Map = {
