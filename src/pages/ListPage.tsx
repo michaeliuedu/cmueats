@@ -2,7 +2,7 @@
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 import { useEffect, useLayoutEffect, useReducer, useRef } from 'react';
 
-import SelectSort, { SelectSort as SelectSortType } from '../components/SelectSort';
+import SortSelect, { SelectSort as SelectSortType } from '../components/SelectSort';
 import { ILocation_Full } from '../types/locationTypes';
 import SelectLocation from '../components/SelectLocation';
 import SearchBar from '../components/SearchBar';
@@ -69,7 +69,7 @@ function ListBox({
                 <div className="list-controls-layout">
                     <SearchBar searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
                     <SelectLocation {...{ setLocationFilterQuery, locations }} />
-                    <SelectSort sortOption={sortQuery} setSortOption={setSortOption} />
+                    <SortSelect sortOption={sortQuery} setSortOption={setSortOption} />
                 </div>
             </div>
             <EateryCardGrid

@@ -35,10 +35,10 @@ const compareLocationsByRating = (l1: ILocation_Full, l2: ILocation_Full, type: 
     const r1 = l1.averageRating ?? null;
     const r2 = l2.averageRating ?? null;
 
+    if (r1 === null && r2 === null) return compareLocationsByTime(l1, l2);
     if (r1 === null) return 1;
     if (r2 === null) return -1;
 
-    if (r1 === null && r2 === null) return compareLocationsByTime(l1, l2);
     if (r1 === r2) return compareLocationsByTime(l1, l2);
 
     return type === 'stars-asc' ? r1 - r2 : r2 - r1;
@@ -92,7 +92,7 @@ export default function EateryCardGrid({
     if (locations.length === 0) return <NoResultsError onClear={() => setSearchQuery('')} />;
 
     const sortedLocations = [...locations].sort((location1, location2) => {
-        if (sortOption != 'time') return compareLocationsByRating(location1, location2, sortOption);   
+        if (sortOption !== 'time') return compareLocationsByRating(location1, location2, sortOption);
         return compareLocationsByTime(location1, location2);
     }); // we make a copy to avoid mutating the original array
 

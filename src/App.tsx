@@ -53,7 +53,7 @@ export default function App() {
             };
         });
         return averages;
-    }, [reviewSummaries]); 
+    }, [reviewSummaries, locationIds]);
     
     const fullLocationData: ILocation_Full[] | undefined = locations?.map((location) => ({
         ...location,

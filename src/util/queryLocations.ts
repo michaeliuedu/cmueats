@@ -9,8 +9,6 @@ import {
 import { getNextTimeSlot, isValidTimeSlotArray, getApproximateTimeStringFromMinutes } from './time';
 import assert from './assert';
 
-import { fetchClient } from '../api';
-
 const WEEKDAYS = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 
 /**

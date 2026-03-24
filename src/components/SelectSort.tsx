@@ -7,12 +7,12 @@ type SelectSortProps = {
     setSortOption: React.Dispatch<SelectSort>;
 };
 
-function SelectSort({ sortOption, setSortOption }: SelectSortProps) {
+function SelectSortControl({ sortOption, setSortOption }: SelectSortProps) {
     return (
         <select
             onChange={(e) => setSortOption(e.target.value as SelectSort)}
             className={css.select}
-            defaultValue={sortOption}
+            value={sortOption}
         >
             <option value="time">Sort by Opening</option>
             <option value="stars-desc">Sort by Highest Rating</option>
@@ -21,4 +21,4 @@ function SelectSort({ sortOption, setSortOption }: SelectSortProps) {
     );
 }
 
-export default SelectSort;
+export default SelectSortControl;
